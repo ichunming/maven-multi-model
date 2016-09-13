@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<user>
+		<name>ming</name>
+		<password>1234</password>
+	</user>
+	<user>
+        <name>ning</name>
+        <password>1234</password>
+    </user>
+</root>

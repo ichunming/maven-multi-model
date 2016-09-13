@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ichunming.dao.UserInfoDao">
+	<resultMap id="BaseResultMap" type="com.ichunming.model.UserInfo">
+		<result column="uid" property="uid" jdbcType="INTEGER" />
+		<result column="username" property="username" jdbcType="VARCHAR" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="locate_province" property="locateProvince" jdbcType="VARCHAR" />
+		<result column="locate_city" property="locateCity" jdbcType="VARCHAR" />
+		<result column="sign" property="sign" jdbcType="VARCHAR" />
+		<result column="real_name" property="realName" jdbcType="VARCHAR" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+		<result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+    <select id="select" resultMap="BaseResultMap" parameterType="long">
+        select uid, username, code, locate_province, locate_city, sign, real_name, phone, address, create_date, update_date
+        from user_info
+        where uid = #{uid,jdbcType=INTEGER}
+    </select>
+   
+    <select id="selectByUsername" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select uid
+        from user_info
+        where username = #{username,jdbcType=VARCHAR}
+    </select>
+    
+	<insert id="insert" parameterType="com.ichunming.model.UserInfo">
+		insert into user_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="username != null">
+				username,
+			</if>
+			<if test="code != null">
+				code,
+			</if>
+			<if test="locateProvince != null">
+				locate_province,
+			</if>
+			<if test="locateCity != null">
+				locate_city,
+			</if>
+			<if test="sign != null">
+				sign,
+			</if>
+			<if test="realName != null">
+				real_name,
+			</if>
+			<if test="phone != null">
+				phone,
+			</if>
+			<if test="address != null">
+				address,
+			</if>
+			create_date,
+			update_date
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="username != null">
+				#{username,jdbcType=VARCHAR},
+			</if>
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="locateProvince != null">
+				#{locateProvince,jdbcType=VARCHAR},
+			</if>
+			<if test="locateCity != null">
+				#{locateCity,jdbcType=VARCHAR},
+			</if>
+			<if test="sign != null">
+				#{sign,jdbcType=VARCHAR},
+			</if>
+			<if test="realName != null">
+				#{realName,jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null">
+				#{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				#{address,jdbcType=VARCHAR},
+			</if>
+			now(),
+			now()
+		</trim>
+	</insert>
+	
+    <update id="update" parameterType="com.ichunming.model.UserInfo">
+        update user_info
+        <set>
+            <if test="username != null">
+                username = #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="code != null">
+                code = #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="locate_province != null">
+                locate_province = #{locate_province,jdbcType=VARCHAR},
+            </if>
+            <if test="locate_city != null">
+                locate_city = #{locate_city,jdbcType=VARCHAR},
+            </if>
+            <if test="sign != null">
+                sign = #{sign,jdbcType=VARCHAR},
+            </if>
+            <if test="real_name != null">
+                real_name = #{real_name,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                phone = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="address != null">
+                address = #{address,jdbcType=VARCHAR},
+            </if>
+            update_date = now()
+        </set>
+        where uid = #{uid,jdbcType=INTEGER}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from user_info
+        where uid = #{uid,jdbcType=INTEGER}
+    </delete>	
+</mapper>

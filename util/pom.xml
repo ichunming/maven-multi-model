@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>util</artifactId>
+	<packaging>jar</packaging>
+	<name>util</name>
+	<parent>
+		<groupId>com.ichunming</groupId>
+		<artifactId>parent</artifactId>
+		<version>0.1</version>
+	</parent>
+
+	<properties>
+		<jdom.version>2.0.5</jdom.version>
+		<poi.version>3.9</poi.version>
+		<commons.email.version>1.4</commons.email.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.jdom</groupId>
+			<artifactId>jdom2</artifactId>
+			<version>${jdom.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>${poi.version}</version>
+		</dependency>
+		<dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-email</artifactId>
+            <version>${commons.email.version}</version>
+        </dependency>
+	</dependencies>
+</project>
