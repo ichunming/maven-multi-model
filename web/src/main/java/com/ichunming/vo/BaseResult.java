@@ -1,24 +1,30 @@
 package com.ichunming.vo;
 
+import com.ichunming.constant.ErrorCode;
+
 public class BaseResult {
-	private String code;
+	private Long code;
 	private Object data;
 	
-	public BaseResult() {}
-	
-	public BaseResult(String code) {
-		this.code = code;
+	public BaseResult() {
+		this.code = ErrorCode.ERRCODE_SUCCESS;
+		this.data = null;
 	}
 	
-	public BaseResult(String code, Object data) {
+	public BaseResult(Long code) {
+		this.code = code;
+		this.data = null;
+	}
+	
+	public BaseResult(Long code, Object data) {
 		this.code = code;
 		this.data = data;
 	}
 	
-	public String getCode() {
+	public Long getCode() {
 		return code;
 	}
-	public void setCode(String code) {
+	public void setCode(Long code) {
 		this.code = code;
 	}
 	public Object getData() {

@@ -16,8 +16,18 @@
         http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
 	<context:annotation-config />
-
+    <context:property-placeholder
+        location="classpath:ds.properties,classpath:oss.properties,classpath:mail.properties" />
 	<!-- 配置要扫描的包 -->
 	<context:component-scan base-package="com.ichunming.service" />
+	<context:component-scan base-package="com.ichunming.util.helper" />
 
+	<bean id="configProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="locations">
+			<list>
+				<value>classpath:oss.properties</value>
+				<value>classpath:mail.properties</value>
+			</list>
+		</property>
+	</bean>
 </beans>

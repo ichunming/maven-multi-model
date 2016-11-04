@@ -15,9 +15,6 @@
         http://www.springframework.org/schema/mvc
         http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
-	<!-- 加载 ds.properties 配置文件 -->
-	<context:property-placeholder location="classpath:ds.properties" />
-
 	<!-- 配置数据源(连接池，druid) -->
 	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
 		init-method="init" destroy-method="close">

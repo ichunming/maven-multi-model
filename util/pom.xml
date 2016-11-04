@@ -16,6 +16,8 @@
 		<jdom.version>2.0.5</jdom.version>
 		<poi.version>3.9</poi.version>
 		<commons.email.version>1.4</commons.email.version>
+		<gson.version>2.3.1</gson.version>
+		<httpmime.version>4.5.2</httpmime.version>
 	</properties>
 
 	<dependencies>
@@ -30,9 +32,19 @@
 			<version>${poi.version}</version>
 		</dependency>
 		<dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-email</artifactId>
-            <version>${commons.email.version}</version>
-        </dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-email</artifactId>
+			<version>${commons.email.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>${gson.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpmime</artifactId>
+			<version>${httpmime.version}</version>
+		</dependency>
 	</dependencies>
 </project>

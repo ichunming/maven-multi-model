@@ -1,21 +1,18 @@
-package com.ichunming.service;
+package com.ichunming.service.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.ichunming.dao.UserInfoDao;
 import com.ichunming.model.UserInfo;
-import com.ichunming.service.impl.UserServiceImpl;
+import com.ichunming.service.BaseTest;
 
-@RunWith(PowerMockRunner.class)
 public class UserServiceImplTest extends BaseTest{
 	@InjectMocks
 	private UserServiceImpl target;

@@ -24,7 +24,7 @@ public class BaseTest {
 		SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
 		reader.close();
 
-		// create sel session
+		// create sql session
 		sqlSession = sqlSessionFactory.openSession();
 	};
 

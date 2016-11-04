@@ -19,8 +19,8 @@
   </environments>
 
   <mappers>
-    <!-- 配置Dao和对应的Mapper -->
-    <mapper class="com.ichunming.dao.UserInfoDao"/>
+    <!-- 配置Mapper -->
+    <!-- <mapper class="com.ichunming.dao.UserInfoDao"/> -->
     <mapper resource="com/ichunming/mapper/UserInfoMapper.xml"/>
   </mappers>
 

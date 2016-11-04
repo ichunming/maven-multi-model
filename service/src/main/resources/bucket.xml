@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <bucket>
+        <name>photo</name>
+        <url>photo.oss-cn-shanghai.aliyuncs.com</url>
+    </bucket>
+    <bucket>
+        <name>audio</name>
+        <url>audio.oss-cn-shanghai.aliyuncs.com</url>
+    </bucket>
+    <bucket>
+        <name>video</name>
+        <url>video.oss-cn-shanghai.aliyuncs.com</url>
+    </bucket>
+</root>

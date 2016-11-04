@@ -1,7 +1,7 @@
 /**
  * xml util
- * 2016/09/07 chunming
- * v0.1
+ * created 2016/09/07
+ * by ming
  */
 package com.ichunming.util;
 

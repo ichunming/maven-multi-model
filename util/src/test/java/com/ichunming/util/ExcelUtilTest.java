@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -105,13 +106,13 @@ public class ExcelUtilTest {
 	        // get sheet
 	        sheet = wb.getSheetAt(0);
 	        // convert to object
-	        users = ExcelUtil.convertToList(sheet, User.class, true);
+	        users = ExcelUtil.convertToList(sheet, User.class);
 	        
 	        // print user
 	        for(User user : users) {
 	        	System.out.println(user.toString());
 	        }
-		} catch (IOException e) {
+		} catch (IOException | InstantiationException | IllegalAccessException | NoSuchMethodException | SecurityException | IllegalArgumentException | InvocationTargetException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

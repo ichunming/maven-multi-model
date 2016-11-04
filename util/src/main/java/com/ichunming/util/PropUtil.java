@@ -1,7 +1,7 @@
 /**
  * properties util
- * 2016/08/07 ming
- * v0.1
+ * created 2016/08/07
+ * by ming
  */
 package com.ichunming.util;
 
@@ -16,12 +16,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class PropUtil {
-	private static final Logger logger = LoggerFactory.getLogger(PropUtil.class);
-	
+
 	// private constructor
 	private PropUtil() {}
 	
@@ -29,15 +25,14 @@ public class PropUtil {
 	 * 加载properties文件，转换成map类型返回
 	 * @param filePath
 	 * @return
+	 * @throws IOException 
 	 */
-	public static Map<String, String> read(String filePath) {
+	public static Map<String, String> read(String filePath) throws IOException {
 		Map<String, String> map = new HashMap<String, String>();
 		
 		Properties prop = new Properties();
 		InputStream is = null;
 		InputStreamReader isr = null;
-		String loadSuccess = "load properties file success:" + filePath;
-		String loadError = "run into an error when load properties file:" + filePath;
 		
 		try {
 			is = new FileInputStream(filePath);
@@ -53,29 +48,25 @@ public class PropUtil {
 				key = (String)it.next(); 
 				map.put(key, prop.getProperty(key));
 			}
-			// print status
-			logger.debug(loadSuccess);
 		} catch (FileNotFoundException e) {
 			// print status
-			logger.debug(loadError);
+			throw e;
 		} catch (IOException e) {
 			// print status
-			logger.debug(loadError);
+			throw e;
 		} finally {
 			if(null != is) {
 				try {
 					is.close();
 				} catch (IOException e) {
-					// print status
-					logger.error(loadError);
+					throw e;
 				}
 			}
 			if(null != isr) {
 				try {
 					isr.close();
 				} catch (IOException e) {
-					// print status
-					logger.error(loadError);
+					throw e;
 				}
 			}
 		}

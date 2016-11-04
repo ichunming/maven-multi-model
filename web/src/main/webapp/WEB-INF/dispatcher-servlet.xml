@@ -32,4 +32,21 @@
     <mvc:resources location="/img/" mapping="/img/**"/>
     <mvc:resources location="/css/" mapping="/css/**"/>
     <mvc:resources location="/js/" mapping="/js/**"/>
+    
+    <!-- 拦截器 -->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**" />
+            <bean class="com.ichunming.core.interceptor.SecurityInterceptor">
+                <property name="excludeUrls">
+                    <list>
+                        <value>/v1/test/user/login</value>
+                        <value>/404</value>  <!-- 404 -->
+                        <value>/500</value>  <!-- 505 -->
+                        <value>/400</value>  <!-- 400 -->
+                    </list>
+                </property>
+            </bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
 </beans>
