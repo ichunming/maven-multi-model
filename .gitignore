@@ -4,3 +4,5 @@ sql
 target
 #文件
 *ds.properties
+*mail.properties
+*oss.properties
