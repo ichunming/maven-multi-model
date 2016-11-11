@@ -60,6 +60,7 @@ public class TestController {
 	public BaseResult login(HttpServletRequest request) {
 		// 用户登入
 		logger.debug("用户登入");
+		logger.debug("debug log...");
 		
 		request.getSession(true).setAttribute("name", "ming");
 		

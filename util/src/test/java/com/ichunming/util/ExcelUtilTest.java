@@ -10,12 +10,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -31,7 +31,7 @@ public class ExcelUtilTest {
     	
     	// -----------------------------------
     	
-		Workbook wb = null; // workbook
+		HSSFWorkbook wb = null; // workbook
 		Sheet sheet = null; // excel sheet
 		Map<Integer, String> recode = new HashMap<Integer, String>();
 		int line = 0;
@@ -40,31 +40,35 @@ public class ExcelUtilTest {
         wb = new HSSFWorkbook();
         // create excel sheet with name 'example'
         sheet = wb.createSheet("user");
-		// set active sheet
-		wb.setActiveSheet(0);
+		// set ExcelUtil target
+        ExcelUtil.setTarget(wb, sheet);
+		
+        // head style
+		CellStyle headStyle= ExcelUtil.createStyle();
+		ExcelUtil.setFont(headStyle, Font.COLOR_NORMAL, Font.BOLDWEIGHT_BOLD);
+		
+		// data style
+		CellStyle dataStyle = ExcelUtil.createStyle();
+		ExcelUtil.setDefaultDataFormat(dataStyle);
 		
 		// write header
 		recode.clear();
 		setHeader(recode);
-		ExcelUtil.writeLine(sheet, line++, recode);
+		ExcelUtil.writeLine(line++, recode);
 		
 		// write recode
 		for(User user : users) {
 			recode.clear();
 			setRecode(recode, line, user);
-			ExcelUtil.writeLine(sheet, line++, recode);
+			ExcelUtil.setRowStyle(line, dataStyle);
+			ExcelUtil.writeLine(line++, recode);
 		}
 		
 		// set columns width
-		ExcelUtil.setColumnsWidth(sheet, new int[] {0, 1, 2, 3, 4}, new int[] {10, 20, 10, 20, 20});
+		ExcelUtil.setColumnsWidth(new int[] {0, 1, 2, 3, 4}, new int[] {10, 20, 10, 20, 20});
 		
 		// set column style
-		Font font = wb.createFont();  
-		font.setColor(Font.COLOR_NORMAL);
-		font.setBoldweight(Font.BOLDWEIGHT_BOLD);
-		CellStyle headStyle= wb.createCellStyle();  
-		headStyle.setFont(font);
-		ExcelUtil.setRowStyle(sheet, 0, headStyle);
+		ExcelUtil.setRowStyle(0, headStyle);
 		
 		// save file
 		String fold = this.getClass().getClassLoader().getResource("").getPath();
@@ -93,7 +97,7 @@ public class ExcelUtilTest {
     public void readTest() {
     	
     	POIFSFileSystem fs = null; // file
-    	Workbook wb = null; // workbook
+    	HSSFWorkbook wb = null; // workbook
 		Sheet sheet = null; // excel sheet
 		List<User> users = null;
 		
@@ -105,8 +109,10 @@ public class ExcelUtilTest {
 	        wb = new HSSFWorkbook(fs);
 	        // get sheet
 	        sheet = wb.getSheetAt(0);
+	        // set ExcelUtil target
+	        ExcelUtil.setTarget(wb, sheet);
 	        // convert to object
-	        users = ExcelUtil.convertToList(sheet, User.class);
+	        users = ExcelUtil.convertToList(User.class);
 	        
 	        // print user
 	        for(User user : users) {

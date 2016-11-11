@@ -13,12 +13,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFDataFormat;
+import org.apache.poi.hssf.usermodel.HSSFPalette;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +30,21 @@ public class ExcelUtil {
 	
 	// private constructor
 	private ExcelUtil() {}
+
+	public static HSSFWorkbook wb;
+	
+	public static Sheet sheet;
+	
+	// usable index
+	private static final short[] indexs = {0x19, 0x1b, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27};
+	
+	private static int cursor = -1;
+	
+	public static void setTarget(HSSFWorkbook wb, Sheet sheet) {
+		ExcelUtil.wb = wb;
+		ExcelUtil.sheet = sheet;
+		wb.setActiveSheet(wb.getSheetIndex(sheet));
+	}
 	
 	/**
 	 * Excel写入一行
@@ -35,12 +52,12 @@ public class ExcelUtil {
 	 * @param line
 	 * @param recode
 	 */
-	public static void writeLine(Sheet sheet, int line, Map<Integer, String> recode) {
+	public static void writeLine(int line, Map<Integer, String> recode) {
 		// 创建row
 		sheet.createRow(line);
 		// 单元格设值
 		for(int column : recode.keySet()) {
-			writeCell(sheet, line, column, recode.get(column));
+			writeCell(line, column, recode.get(column));
 		}
 	}
 	
@@ -51,7 +68,7 @@ public class ExcelUtil {
 	 * @param column
 	 * @param value
 	 */
-	public static void writeCell(Sheet sheet, int rownum, int column, String value) {
+	public static void writeCell(int rownum, int column, String value) {
 		Cell cell = sheet.getRow(rownum).createCell(column);
 		cell.setCellValue(value);
 	}
@@ -62,12 +79,12 @@ public class ExcelUtil {
 	 * @param line
 	 * @param style
 	 */
-	public static void setRowStyle(Sheet sheet, int line, CellStyle style) {
+	public static void setRowStyle(int line, CellStyle style) {
 		// 取得Row
 		Row row = sheet.getRow(line);
 		// 设置属性
 		for(int column = row.getFirstCellNum(); column < row.getLastCellNum(); column++) {
-			setCellStyle(sheet, line, column, style);
+			setCellStyle(line, column, style);
 		}
 	}
 	
@@ -78,7 +95,7 @@ public class ExcelUtil {
 	 * @param column
 	 * @param style
 	 */
-	public static void setCellStyle(Sheet sheet, int line, int column, CellStyle style) {
+	public static void setCellStyle(int line, int column, CellStyle style) {
 		// 取得单元格
 		Cell cell = sheet.getRow(line).getCell(column);
 		// 设置单元格属性
@@ -91,8 +108,16 @@ public class ExcelUtil {
 	 * @param column
 	 * @param width
 	 */
-	public static void setColumnWidth(Sheet sheet, int column, int width) {
+	public static void setColumnWidth(int column, int width) {
 		sheet.setColumnWidth(column, 256 * width);
+	}
+	
+	/**
+	 * 设置默认列宽
+	 * @param width
+	 */
+	public static void setDefaultColumnWidth(int width) {
+		sheet.setDefaultColumnWidth(width);
 	}
 	
 	/**
@@ -101,9 +126,9 @@ public class ExcelUtil {
 	 * @param columns
 	 * @param widths
 	 */
-	public static void setColumnsWidth(Sheet sheet, int[] widths) {
+	public static void setColumnsWidth(int[] widths) {
 		for(int i = 0; i < widths.length; i++) {
-			setColumnWidth(sheet, i, widths[i]);
+			setColumnWidth(i, widths[i]);
 		}
 	}
 	
@@ -113,9 +138,9 @@ public class ExcelUtil {
 	 * @param column
 	 * @param width
 	 */
-	public static void setColumnsWidth(Sheet sheet, int[] columns, int[] widths) {
+	public static void setColumnsWidth(int[] columns, int[] widths) {
 		for(int i = 0; i < columns.length; i++) {
-			setColumnWidth(sheet, columns[i], widths[i]);
+			setColumnWidth(columns[i], widths[i]);
 		}
 	}
 	
@@ -125,16 +150,34 @@ public class ExcelUtil {
 	 * @param line
 	 * @param height
 	 */
-	public static void setRowHeight(Sheet sheet, int line, int height) {
+	public static void setRowHeight(int line, int height) {
 		sheet.getRow(line).setHeight((short)height);
 	}
 	
 	/**
-	 * 取得默认标题样式
+	 * 设置默认列宽
+	 * @param width
+	 */
+	public static void setDefaultDataFormat(CellStyle style) {
+		HSSFDataFormat fmt= wb.createDataFormat();
+		style.setDataFormat(fmt.getFormat("@"));
+	}
+	
+	/**
+	 * 设置默认列宽
+	 * @param width
+	 */
+	public static void setDataFormat(CellStyle style, String format) {
+		HSSFDataFormat fmt= wb.createDataFormat();
+		style.setDataFormat(fmt.getFormat(format));
+	}
+	
+	/**
+	 * 创建默认标题样式
 	 * @param wb
 	 * @return
 	 */
-	public static CellStyle getDefaultHeadStyle(Workbook wb) {
+	public static CellStyle createDefaultHeadStyle() {
 		Font font = wb.createFont();
 		font.setColor(Font.COLOR_NORMAL);
 		font.setBoldweight(Font.BOLDWEIGHT_BOLD);
@@ -147,17 +190,94 @@ public class ExcelUtil {
 		headStyle.setWrapText(true);
 		return headStyle;
 	}
+
+	/**
+	 * 创建有背景色的样式
+	 * @param wb
+	 * @param red
+	 * @param green
+	 * @param blue
+	 * @return
+	 */
+	public static CellStyle createStyleWithBGC(int red, int green, int blue) {
+		// color 0~255
+		red = red < 0 ? 0 : red;
+		red = red > 255 ? 255 : red;
+		green = green < 0 ? 0 : green;
+		green = green > 255 ? 255 : green;
+		blue = blue < 0 ? 0 : blue;
+		blue = blue > 255 ? 255 : blue;
+		
+		CellStyle style = wb.createCellStyle();
+		style.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		HSSFPalette palette = wb.getCustomPalette();
+		short index = getNextIndex();
+		logger.debug("" + index);
+	    palette.setColorAtIndex(index, (byte) red, (byte) green, (byte) blue);
+	    style.setFillForegroundColor(index);
+	    
+	    return style;
+	}
+	
+	/**
+	 * 设置自动换行
+	 * @param style
+	 */
+	public static void setWrapText(CellStyle style) {
+		style.setWrapText(true);
+	}
+	
+	/**
+	 * 设置边框样式
+	 * @param style
+	 * @param border
+	 */
+	public static void setBorder(CellStyle style, short border, short color) {
+		style.setBorderTop(border);
+	    style.setBorderRight(border);
+	    style.setBorderBottom(border);
+	    style.setBorderLeft(border);
+	    
+	    style.setTopBorderColor(color);
+	    style.setRightBorderColor(color);
+	    style.setBottomBorderColor(color);
+	    style.setLeftBorderColor(color);
+	}
+	
+	/**
+	 * 创建单元格样式
+	 * @return
+	 */
+	public static CellStyle createStyle() {
+		return wb.createCellStyle();
+	}
+
+	/**
+	 * 设置字体样式
+	 * @param style
+	 * @param color
+	 * @param weigth
+	 */
+	public static void setFont(CellStyle style, short color, short weigth) {
+		Font font = wb.createFont();
+		// 字体
+		font.setColor(color);
+		font.setBoldweight(weigth);
+		style.setFont(font);
+	}
 	
 	/**
 	 * 合并单元格
 	 * @param sheet
-	 * @param region
+	 * @param firstRow
+	 * @param lastRow
+	 * @param firstCol
+	 * @param lastCol
 	 */
-	public static void mergeRegion(Sheet sheet, int firstRow, int lastRow, int firstCol, int lastCol) {
+	public static void mergeRegion(int firstRow, int lastRow, int firstCol, int lastCol) {
 		CellRangeAddress region = new CellRangeAddress(firstRow, lastRow, firstCol, lastCol);
 		sheet.addMergedRegion(region);
 	}
-	
 	
 	/**
 	 * excel文件内容转换成对象list
@@ -171,7 +291,7 @@ public class ExcelUtil {
 	 * @throws IllegalAccessException 
 	 * @throws InstantiationException 
 	 */
-	public static <T> List<T> convertToList(Sheet sheet, Class<T> clz) throws InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException {
+	public static <T> List<T> convertToList(Class<T> clz) throws InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException {
 		List<T> result = null; // result
 		T obj = null; // object
 		
@@ -184,7 +304,7 @@ public class ExcelUtil {
 		//convert to object
 		for(int rownum = rowFrom; rownum <= rowTo; rownum++) {
 			// new instance
-			obj = convertToObj(sheet, clz, rownum);
+			obj = convertToObj(clz, rownum);
 			
 			if(null == obj) {
 				// convert fail
@@ -211,7 +331,7 @@ public class ExcelUtil {
 	 * @throws InvocationTargetException 
 	 * @throws IllegalArgumentException 
 	 */
-	public static <T> T convertToObj(Sheet sheet, Class<T> clz, int rownum) throws InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException {
+	public static <T> T convertToObj(Class<T> clz, int rownum) throws InstantiationException, IllegalAccessException, NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException {
 		T obj = null; // object
 		Field[] fields = null; // fields
 		String[] methods = null; // methods
@@ -293,5 +413,19 @@ public class ExcelUtil {
 		}
 		
 		return result;
+	}
+	
+	/**
+	 * color用，取得下一个index值
+	 * @return
+	 */
+	private static short getNextIndex() {
+		if(cursor < indexs.length - 1) {
+			cursor++;
+		} else {
+			cursor = -1;
+			return getNextIndex();
+		}
+		return indexs[cursor];
 	}
 }
